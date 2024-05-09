@@ -32,11 +32,11 @@ def addToDatabase(csvFileName):
         dbcursor = database.cursor()
         sql_query = f""" 
             LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
-            INTO TABLE YAS_TBX_Bookings_Quotes_Count_Reports
+            INTO TABLE TBX_Bookings_Quotes_Count_Reports
             FIELDS TERMINATED BY ','
             ENCLOSED BY '"'
             LINES TERMINATED BY '\n'
-            (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
+            (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
         """
         dbcursor.execute(sql_query)
         database.commit()
@@ -47,7 +47,7 @@ def addToDatabase(csvFileName):
         print("Error: An error occurred while copying the file. " + str(e))
 
 
-csvFileName="TBX_Bookings_Quotes_Count_Reports.csv"
+csvFileName="YAS_TBX_Bookings_Quotes_Count_Reports.csv"
 
 addToDatabase(csvFileName)
 

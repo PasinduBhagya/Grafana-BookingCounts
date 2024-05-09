@@ -22,37 +22,36 @@ def fetchFromDatabase(sql_query):
     database.close() 
     return output
 
-def addToDatabase(csvFileName):
+def addToDatabase():
     database = connectToDatabase()
-   
-    if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
-        os.remove(f"/var/lib/mysql-files/{csvFileName}")
+    dbcursor = database.cursor()
+
     try:
-        try:
-            shutil.copy(f"SAMPLE_DATA/{csvFileName}", "/var/lib/mysql-files/")
-        except Exception as e:
-            print("Error: An error occurred while copying the file. " + str(e))
-        dbcursor = database.cursor()
-        sql_query = f""" 
-            LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
-            INTO TABLE TBX_Bookings_Quotes_Count_Reports
-            FIELDS TERMINATED BY ','
-            ENCLOSED BY '"'
-            LINES TERMINATED BY '\n'
-            (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
-        """
-        dbcursor.execute(sql_query)
+        # YAS,2022,JAN,2,5,0,0
+
+        ProjectName = "YAS"
+        YEAR = 2022
+        MONTH = "JAN"
+        BOOKING_COUNT = 2
+        PAX_COUNT = 5
+        QUOTE_COUNT = 0
+        QUOTE_PAX_COUNT = 0
+        
+        sql_query = """INSERT INTO TBX_Bookings_Quotes_Count_Reports (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+        values = (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
+
+        dbcursor.execute(sql_query, values)
         database.commit()
         dbcursor.close()
         database.close()
-        print("INFO: Importing to database is completed.")
+        print("INFO: Adding to database is completed.")
     except Exception as e:
         print("Error: An error occurred while adding to the Database. " + str(e))
 
 
 csvFileName="YAS_TBX_Bookings_Quotes_Count_Reports.csv"
 
-addToDatabase(csvFileName)
+addToDatabase()
 
 # YAS_Bookings_Quotes_Count_Report (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
 # YAS_Bookings_Quotes_Surf_or_TBX_Central_Pax_Counts (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)

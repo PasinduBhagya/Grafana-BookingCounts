@@ -22,36 +22,37 @@ def fetchFromDatabase(sql_query):
     database.close() 
     return output
 
-def addToDatabase():
+def addToDatabase(csvFileName):
     database = connectToDatabase()
     dbcursor = database.cursor()
-
-    try:
-        # YAS,2022,JAN,2,5,0,0
-
-        ProjectName = "YAS"
-        YEAR = 2022
-        MONTH = "JAN"
-        BOOKING_COUNT = 2
-        PAX_COUNT = 5
-        QUOTE_COUNT = 0
-        QUOTE_PAX_COUNT = 0
-        
-        sql_query = """INSERT INTO TBX_Bookings_Quotes_Count_Reports (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        values = (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
-
-        dbcursor.execute(sql_query, values)
-        database.commit()
-        dbcursor.close()
-        database.close()
-        print("INFO: Adding to database is completed.")
-    except Exception as e:
-        print("Error: An error occurred while adding to the Database. " + str(e))
+    with open(f"SAMPLE_DATA/{csvFileName}", 'r') as resultFile:
+        for line in resultFile:
+            dataInLine =  line.split(",")
+            try:
+                ProjectName = dataInLine[0].strip()
+                YEAR = dataInLine[1].strip()
+                MONTH = dataInLine[2].strip()
+                BOOKING_COUNT = dataInLine[3].strip()
+                PAX_COUNT = dataInLine[3].strip()
+                QUOTE_COUNT = dataInLine[4].strip()
+                QUOTE_PAX_COUNT = dataInLine[5].strip()
+                
+                sql_query = """INSERT INTO TBX_Bookings_Quotes_Count_Reports (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+                values = (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
+                dbcursor.execute(sql_query, values)
+                print("INFO: Adding to database is completed.")
+                database.commit()
+            except Exception as e:
+                print("Error: An error occurred while adding to the Database. " + str(e))
+    
+    
+    dbcursor.close()
+    database.close()
 
 
 csvFileName="YAS_TBX_Bookings_Quotes_Count_Reports.csv"
 
-addToDatabase()
+addToDatabase(csvFileName)
 
 # YAS_Bookings_Quotes_Count_Report (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
 # YAS_Bookings_Quotes_Surf_or_TBX_Central_Pax_Counts (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)

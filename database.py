@@ -28,7 +28,10 @@ def addToDatabase(csvFileName):
     if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
     try:
-        shutil.copy(f"SAMPLE_DATA/{csvFileName}", "/var/lib/mysql-files/")
+        try:
+            shutil.copy(f"SAMPLE_DATA/{csvFileName}", "/var/lib/mysql-files/")
+        except Exception as e:
+            print("Error: An error occurred while copying the file. " + str(e))
         dbcursor = database.cursor()
         sql_query = f""" 
             LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
@@ -44,7 +47,7 @@ def addToDatabase(csvFileName):
         database.close()
         print("INFO: Importing to database is completed.")
     except Exception as e:
-        print("Error: An error occurred while copying the file. " + str(e))
+        print("Error: An error occurred while adding to the Database. " + str(e))
 
 
 csvFileName="YAS_TBX_Bookings_Quotes_Count_Reports.csv"

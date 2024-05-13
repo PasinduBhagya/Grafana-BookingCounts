@@ -25,10 +25,11 @@ def fetchFromDatabase(sql_query):
 def addToDatabase(csvFileName):
     database = connectToDatabase()
     dbcursor = database.cursor()
-    with open(f"SAMPLE_DATA/{csvFileName}", 'r') as resultFile:
+    with open(f"DATA/{csvFileName}", 'r') as resultFile:
         for line in resultFile:
-            dataInLine =  line.split(",")
             try:
+                dataInLine =  line.split(",")
+
                 ProjectName = dataInLine[0].strip()
                 YEAR = dataInLine[1].strip()
                 MONTH = dataInLine[2].strip()
@@ -43,8 +44,7 @@ def addToDatabase(csvFileName):
                 print("INFO: Adding to database is completed.")
                 database.commit()
             except Exception as e:
-                print("Error: An error occurred while adding to the Database. " + str(e))
-    
+                print("Error: An error occurred while adding to the Database. " + str(e))    
     
     dbcursor.close()
     database.close()
@@ -54,3 +54,5 @@ ProjectNames = ["YAS"]
 for ProjectName in ProjectNames:
     csvFileName=ProjectName + "_TBX_Bookings_Quotes_Count_Reports.csv"
     addToDatabase(csvFileName)
+    # Move the CSV file to Old Data
+    shutil.move(f"DATA/{csvFileName}", "OLD_DATA")

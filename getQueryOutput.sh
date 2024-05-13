@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCHEMA_NAME='SchemaName'
 SCHEMA_PASSWORD='SchemaPassword'
 SID='SID-Name'

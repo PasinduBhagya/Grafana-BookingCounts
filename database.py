@@ -49,12 +49,8 @@ def addToDatabase(csvFileName):
     dbcursor.close()
     database.close()
 
+ProjectNames = ["YAS"]
 
-csvFileName="YAS_TBX_Bookings_Quotes_Count_Reports.csv"
-
-addToDatabase(csvFileName)
-
-# YAS_Bookings_Quotes_Count_Report (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
-# YAS_Bookings_Quotes_Surf_or_TBX_Central_Pax_Counts (YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
-# YAS_Component_Booking_Counts (YEAR, MONTH, BOOKING_COUNT, PRODUCT_CODE, CITY_CODE)
-# YAS_Package_Bookings_Pre_builds_EP_and_DP 
+for ProjectName in ProjectNames:
+    csvFileName=ProjectName + "_TBX_Bookings_Quotes_Count_Reports.csv"
+    addToDatabase(csvFileName)

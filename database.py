@@ -22,23 +22,23 @@ def fetchFromDatabase(sql_query):
     database.close() 
     return output
 
-def addToDatabase(csvFileName):
+def addToDatabase(csvFileName, ProjectName):
     database = connectToDatabase()
     dbcursor = database.cursor()
     with open(f"DATA/{csvFileName}", 'r') as resultFile:
         for line in resultFile:
             try:
                 dataInLine =  line.split(",")
-
-                ProjectName = dataInLine[0].strip()
-                YEAR = dataInLine[1].strip()
-                MONTH = dataInLine[2].strip()
-                BOOKING_COUNT = dataInLine[3].strip()
+		
+                ProjectName = ProjectName
+                YEAR = dataInLine[0].strip()
+                MONTH = dataInLine[1].strip()
+                BOOKING_COUNT = dataInLine[2].strip()
                 PAX_COUNT = dataInLine[3].strip()
                 QUOTE_COUNT = dataInLine[4].strip()
                 QUOTE_PAX_COUNT = dataInLine[5].strip()
                 
-                sql_query = """INSERT INTO TBX_Bookings_Quotes_Count_Reports (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+                sql_query = """INSERT INTO tbx_bookings_quotes_count_reports (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
                 values = (ProjectName, YEAR, MONTH, BOOKING_COUNT, PAX_COUNT, QUOTE_COUNT, QUOTE_PAX_COUNT)
                 dbcursor.execute(sql_query, values)
                 print("INFO: Adding to database is completed.")
@@ -48,11 +48,3 @@ def addToDatabase(csvFileName):
     
     dbcursor.close()
     database.close()
-
-ProjectNames = ["YAS"]
-
-for ProjectName in ProjectNames:
-    csvFileName=ProjectName + "_TBX_Bookings_Quotes_Count_Reports.csv"
-    addToDatabase(csvFileName)
-    # Move the CSV file to Old Data
-    shutil.move(f"DATA/{csvFileName}", "OLD_DATA")

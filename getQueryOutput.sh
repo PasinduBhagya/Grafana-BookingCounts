@@ -14,6 +14,7 @@ $SQLPLUS_PATH $SCHEMA_NAME/$SCHEMA_PASSWORD@$SID << EOF
 EOF
 
 sed -e '/^$/d' -e '1d' lastMonthBookingCount.csv > temp.csv  
-sed -e '1d' temp.csv  > lastMonthBookingCount.csv 
+sed -e '1d' temp.csv  > temp2.csv
+sed -e 's/"//g' temp2.csv > lastMonthBookingCount.csv
 
 mv lastMonthBookingCount.csv "$OUTPUT_PATH/${PROJECT_NAME}_TBX_Bookings_Quotes_Count_Reports.csv"

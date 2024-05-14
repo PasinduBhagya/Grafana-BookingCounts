@@ -1,3 +1,5 @@
 #!/bin/bash
 
-scp <Username>@<IP_Address>:/tmp/{ProjectName}_TBX_Bookings_Quotes_Count_Reports.csv 
+scp cgapp@10.13.2.3:/tmp/YAS_TBX_Bookings_Quotes_Count_Reports.csv /usr/local/grafana/Grafana-BookingCounts/DATA 
+
+/usr/local/bin/python3.8 /usr/local/grafana/Grafana-BookingCounts/database.py 

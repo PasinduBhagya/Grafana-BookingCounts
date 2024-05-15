@@ -1,34 +1,64 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-from datetime import date
+import subprocess
+from datetime import datetime, timedelta
 from configparser import ConfigParser
 
+
 config = ConfigParser()
-config.read('./configurations.cfg')
+config.read('./.env')
 
-email_content = "/path/to/html"
+logTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def sendEmail(agent_ip, email_content):
-    smtp_server = config.get('SMTP_CONFIGURATIONS', 'SMTP_SERVER')
-    smtp_port = config.get('SMTP_CONFIGURATIONS', 'SMTP_PORT')
-    sender_email = config.get('SMTP_CONFIGURATIONS', 'SMTP_SENDER_EMAIL')
-    sender_password = config.get('SMTP_CONFIGURATIONS', 'SMTP_SENDER_PASSWORD')
-    recipient_email = config.get('SMTP_CONFIGURATIONS', 'RECEPTION_EMAIL')
+def createEmailTemplateSend(projectName, toEmail):
 
-    subject = f"Failed to Load Data to Pulse" + str(date.today())
+    lastMonth = (datetime.today().replace(day=1) - timedelta(days=1)).strftime("%B %Y")
 
-    message = MIMEMultipart()
-    message['Subject'] = subject
-    message['From'] = sender_email
-    message['To'] = recipient_email
+    sample_content = f'''<html>
+                            <head></head>
+                                <body>
+                                    <strong>Hello all,</strong>
+                                    <p>Please be advised that the {lastMonth} booking count data has not been fully loaded into the Pulse DB for the Project {projectName}. Please check for any network connectivity issues.</p>
+                                    <p>Regards,</p>
+                                    <p>Booking Count Monitoring System</p>
+                                </body>
+                        </html>'''
 
-    message.attach(MIMEText(email_content, 'html'))
+    command_to_send_email = [
+        "mutt",
+        "-e", "set content_type=text/html",
+        "-s", f"Booking Count Failure - {projectName}",
+        "--", toEmail
+    ]
 
-    with smtplib.SMTP(smtp_server, smtp_port) as server:
-        server.starttls()
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, recipient_email, message.as_string())
+    mutt_process = subprocess.Popen(command_to_send_email, stdin=subprocess.PIPE)
 
-    
+    mutt_process.communicate(sample_content.encode())
+
+    mutt_process.stdin.close()
+    mutt_process.wait()
+
+# def sendEmailToPM(sendPMmailList):
+#     for projectName in sendPMmailList:
+#         try:
+#             toEmail = config.get('EMAIL_INFO', projectName)
+#             createEmailTemplateSend(projectName, toEmail)
+#         except ConfigParser.NoOptionError:
+#             print(f"{logTime} Error: Invalid Attempt Number.")
+#         except:
+#             print(f"Error: Sending email to {toEmail} has failed. Project Name - {projectName}")
+
+import configparser
+import traceback
+
+def sendEmailToPM(sendPMmailList):
+    for projectName in sendPMmailList:
+        try:
+            toEmail = config.get('EMAIL_INFO', projectName)
+            createEmailTemplateSend(projectName, toEmail)
+        except configparser.NoOptionError:
+            print(f"{logTime} Warning: No Email was found for {projectName}.")
+        except Exception as e:
+            print(f"Error: Sending email to {toEmail} has failed. Project Name - {projectName}")
+            print("Exception:", e)
+            traceback.print_exc()
+     
+        

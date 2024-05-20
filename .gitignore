@@ -1,3 +1,4 @@
 .env
 OLD-DATA
 DATA
+__pycache__

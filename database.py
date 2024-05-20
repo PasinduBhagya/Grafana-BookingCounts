@@ -1,6 +1,4 @@
 from configparser import ConfigParser
-import shutil
-import os
 config = ConfigParser()
 config.read('./.env')
 

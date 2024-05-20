@@ -1,7 +1,8 @@
 import subprocess
 from datetime import datetime, timedelta
 from configparser import ConfigParser
-
+import configparser
+import traceback
 
 config = ConfigParser()
 config.read('./.env')
@@ -35,19 +36,6 @@ def createEmailTemplateSend(projectName, toEmail):
 
     mutt_process.stdin.close()
     mutt_process.wait()
-
-# def sendEmailToPM(sendPMmailList):
-#     for projectName in sendPMmailList:
-#         try:
-#             toEmail = config.get('EMAIL_INFO', projectName)
-#             createEmailTemplateSend(projectName, toEmail)
-#         except ConfigParser.NoOptionError:
-#             print(f"{logTime} Error: Invalid Attempt Number.")
-#         except:
-#             print(f"Error: Sending email to {toEmail} has failed. Project Name - {projectName}")
-
-import configparser
-import traceback
 
 def sendEmailToPM(sendPMmailList):
     for projectName in sendPMmailList:

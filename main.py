@@ -43,7 +43,7 @@ if attemptNumber == 1:
 
         if csvFileName in ProjectNamesOnDataDir:
             try:
-                # addToDatabase(csvFileName, ProjectName)
+                addToDatabase(csvFileName, ProjectName)
                 try:
                     shutil.move(f"DATA/{csvFileName}", "OLD-DATA/")
                 except:
@@ -67,7 +67,7 @@ elif attemptNumber > 1 and attemptNumber <= 3:
 
             if csvFileName in ProjectNamesOnDataDir:
                 try:
-                    # addToDatabase(csvFileName, ProjectName)
+                    addToDatabase(csvFileName, ProjectName)
          
                     try:
                         shutil.move(f"DATA/{csvFileName}", "OLD-DATA/")
@@ -96,7 +96,7 @@ elif attemptNumber == 4:
 
             if csvFileName in ProjectNamesOnDataDir:
                 try:
-                    # addToDatabase(csvFileName, ProjectName)
+                    addToDatabase(csvFileName, ProjectName)
                     try:
                         shutil.move(f"DATA/{csvFileName}", "OLD-DATA/")
                     except:
